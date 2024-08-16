@@ -90,5 +90,8 @@
     "contract-address": "Contract address",
     "owner": "Owner",
     "transfer-btn": "Transfer"
+  },
+  "home": {
+    "goToNfts": "Gehe zu NFTs"
   }
 }

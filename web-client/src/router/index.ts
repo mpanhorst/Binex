@@ -10,8 +10,9 @@ import { ROUTE_NAMES } from '@/enums'
 
 const routes: Array<RouteRecordRaw> = [
   {
-    path: '/:catchAll(.*)',
-    redirect: { name: ROUTE_NAMES.nfts },
+    path: '/',
+    name: 'Home',
+    component: () => import('@/pages/HomePage'),
   },
   {
     path: '/nfts',
@@ -22,6 +23,10 @@ const routes: Array<RouteRecordRaw> = [
     path: '/nfts/:id',
     name: ROUTE_NAMES.nftDetails,
     component: () => import('@/pages/NftDetailsPage'),
+  },
+  {
+    path: '/:catchAll(.*)',
+    redirect: { name: 'Home' },
   },
 ]
 
