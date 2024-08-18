@@ -31,6 +31,7 @@
 </template>
 
 <script lang="ts" setup>
+import { useMetaMaskConnection } from '@/helpers/useMetaMask'
 import { AppButton } from '@/common'
 import { InputField } from '@/fields'
 import { ref } from 'vue'
@@ -62,6 +63,8 @@ const reloadNftList = () => {
 const filterNftList = () => {
   emit('filter', searchedAddress.value)
 }
+
+useMetaMaskConnection()
 </script>
 
 <style lang="scss" scoped>

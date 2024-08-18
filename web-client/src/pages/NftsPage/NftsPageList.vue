@@ -10,12 +10,15 @@
 </template>
 
 <script lang="ts" setup>
+import { useMetaMaskConnection } from '@/helpers/useMetaMask'
 import NftsPageItem from '@/pages/NftsPage/NftsPageItem.vue'
 import { NftItem } from '@/types'
 
 const props = defineProps<{
   nfts: NftItem[]
 }>()
+
+useMetaMaskConnection()
 </script>
 
 <style lang="scss" scoped>

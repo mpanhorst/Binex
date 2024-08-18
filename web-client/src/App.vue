@@ -1,10 +1,13 @@
 <template>
   <div v-if="isAppInitialized" class="app__container">
-    <router-view v-slot="{ Component }">
-      <app-navbar v-if="isValidChain && provider.isConnected" />
+    <router-view v-slot="{ Component, route }">
+      <!-- Navbar und Verbindung prüfen, außer für Home -->
+      <app-navbar
+        v-if="isValidChain && provider.isConnected && route.name !== 'Home'"
+      />
       <transition name="fade" mode="out-in">
         <component
-          v-if="isValidChain && provider.isConnected"
+          v-if="(isValidChain && provider.isConnected) || route.name === 'Home'"
           class="app__main"
           :is="Component"
         />

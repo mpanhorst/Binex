@@ -32,6 +32,7 @@
 </template>
 
 <script lang="ts" setup>
+import { useMetaMaskConnection } from '@/helpers/useMetaMask'
 import { ref } from 'vue'
 import { NoDataMessage, Loader, ErrorMessage, AppButton } from '@/common'
 import { useErc721Store } from '@/store'
@@ -76,6 +77,7 @@ const init = async () => {
   isLoaded.value = true
 }
 
+useMetaMaskConnection()
 init()
 </script>
 

@@ -15,6 +15,8 @@
 </template>
 
 <script lang="ts" setup>
+import { useMetaMaskConnection } from '@/helpers/useMetaMask'
+
 const props = withDefaults(
   defineProps<{
     title?: string
@@ -25,6 +27,8 @@ const props = withDefaults(
     link: '',
   },
 )
+
+useMetaMaskConnection()
 </script>
 
 <style lang="scss" scoped>

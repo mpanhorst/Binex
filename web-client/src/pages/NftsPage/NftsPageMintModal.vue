@@ -46,6 +46,7 @@
 </template>
 
 <script lang="ts" setup>
+import { useMetaMaskConnection } from '@/helpers/useMetaMask'
 import { reactive } from 'vue'
 import { AppButton, TeleportModal, Loader } from '@/common'
 import { InputField } from '@/fields'
@@ -99,6 +100,8 @@ const closeModal = () => {
   if (isFormDisabled.value) return
   emit('close')
 }
+
+useMetaMaskConnection()
 </script>
 
 <style lang="scss" scoped>

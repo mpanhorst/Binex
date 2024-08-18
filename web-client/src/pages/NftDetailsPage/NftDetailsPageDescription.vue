@@ -86,6 +86,7 @@
 </template>
 
 <script lang="ts" setup>
+import { useMetaMaskConnection } from '@/helpers/useMetaMask'
 import { NftDetails } from '@/types'
 import { Icon, AppButton } from '@/common'
 import { ref } from 'vue'
@@ -111,6 +112,8 @@ const reloadNftList = () => {
   emit('save')
   isTransferModalOpened.value = false
 }
+
+useMetaMaskConnection()
 </script>
 
 <style lang="scss" scoped>

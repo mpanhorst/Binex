@@ -31,6 +31,7 @@
 </template>
 
 <script lang="ts" setup>
+import { useMetaMaskConnection } from '@/helpers/useMetaMask'
 import NftsPageList from '@/pages/NftsPage/NftsPageList.vue'
 import NftsPageActions from '@/pages/NftsPage/NftsPageActions.vue'
 import { NoDataMessage, Loader, ErrorMessage } from '@/common'
@@ -94,6 +95,7 @@ const filterNftList = async (address: string) => {
   loadNftData()
 }
 
+useMetaMaskConnection()
 loadNftData()
 </script>
 
