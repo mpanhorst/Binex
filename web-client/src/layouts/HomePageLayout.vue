@@ -1,10 +1,6 @@
 <template>
   <div class="home-layout">
     <navbar />
-    <header class="home-header">
-      <h1>{{ $t('home.title') }}</h1>
-      <p>{{ $t('home.subtitle') }}</p>
-    </header>
     <div class="home-container">
       <button @click="goToNfts" class="cta-button">
         {{ $t('home.goToNfts') }}
@@ -32,29 +28,25 @@ const goToNfts = () => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
   text-align: center;
-}
-
-.home-header {
-  margin-bottom: 40px;
+  width: 100%;
 }
 
 .home-header h1 {
-  font-size: 2.5rem;
-  margin-bottom: 10px;
+  font-size: 3rem; /* Größere Schriftgröße */
+  margin-bottom: 20px;
 }
 
 .home-header p {
-  font-size: 1.2rem;
-  color: #666;
+  font-size: 1.5rem; /* Größere Schriftgröße */
+  color: #ccc;
 }
 
 .home-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  padding: 60px 20px;
 }
 
 .cta-button {

@@ -42,7 +42,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/nfts/:id',
     name: ROUTE_NAMES.nftDetails,
-    component: () => import('@/pages/NftsPage/NftDetailsPage.vue'),
+    component: () => import('@/pages/NftDetailsPage/NftDetailsPage.vue'),
   },
   {
     path: '/:catchAll(.*)',
