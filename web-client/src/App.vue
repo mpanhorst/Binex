@@ -1,13 +1,11 @@
 <template>
   <div v-if="isAppInitialized" class="app__container">
     <router-view v-slot="{ Component, route }">
-      <!-- Navbar und Verbindung prüfen, außer für bestimmte Seiten -->
+      <!-- AppNavbar nur auf NFT-Seiten anzeigen -->
       <app-navbar
         v-if="
           route.name &&
-          !['Home', 'About', 'Blockchain', 'Events'].includes(
-            route.name.toString(),
-          ) &&
+          ['nfts', 'nftDetails'].includes(route.name.toString()) &&
           isValidChain &&
           provider.isConnected
         "
