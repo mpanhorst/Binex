@@ -92,6 +92,30 @@
     "transfer-btn": "Transfer"
   },
   "home": {
-    "goToNfts": "Gehe zu NFTs"
+    "goToNfts": "Go to NFTs",
+    "title": "Blockchain Working Group",
+    "subtitle": "Learn more about our work and blockchain technologies."
+  },
+  "footer": {
+    "copyright": "© {{year}} Blockchain Working Group. All rights reserved.",
+    "impressum": "Imprint",
+    "datenschutz": "Privacy Policy"
+  },
+  "navbar": {
+    "brand": "Blockchain Working Group",
+    "about": "About Us",
+    "blockchain": "Blockchain",
+    "events": "Events",
+    "contact": "Contact"
+  },
+  "about": {
+    "title": "About the Blockchain Working Group",
+    "introduction": "The Blockchain Working Group at our university bridges the gap between students and blockchain technology through practical applications and interdisciplinary research.",
+    "missionTitle": "Our Mission",
+    "missionDescription": "We aim to integrate blockchain technology into education, providing students and faculty with hands-on experience and a deeper understanding of its applications.",
+    "problemTitle": "The Challenge: Blockchain and Crypto in Education",
+    "problemDescription": "Blockchain technology is underrepresented in academic curricula. We work to change that by creating educational opportunities that bring blockchain technology into the classroom.",
+    "visionTitle": "Future Vision",
+    "visionDescription": "We envision a future where blockchain technology is an integral part of education, facilitating decentralized applications and peer-to-peer interactions within the university."
   }
 }

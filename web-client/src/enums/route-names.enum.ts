@@ -3,4 +3,8 @@ export enum ROUTE_NAMES {
   connect = 'connect',
   nfts = 'nfts',
   nftDetails = 'nft-details',
+  about = 'about',
+  blockchain = 'blockchain',
+  events = 'events',
+  contact = 'contact',
 }
