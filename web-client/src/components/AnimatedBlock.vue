@@ -30,8 +30,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, defineEmits } from 'vue'
 import Block from '@/components/Block.vue'
+
+// Event Emitter definieren
+const emit = defineEmits(['restartAnimation'])
 
 const totalSteps = 100
 const currentStep = ref(0)
@@ -49,6 +52,7 @@ const startAnimation = () => {
 
       setTimeout(() => {
         isCompleted.value = false
+        emit('restartAnimation') // Event auslösen
         startAnimation()
       }, 5000)
     }

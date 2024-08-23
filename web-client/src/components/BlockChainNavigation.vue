@@ -13,9 +13,29 @@
           v-if="
             index > 0 &&
             !block.isPlaceholder &&
-            !row.blocks[index - 1].isPlaceholder
+            !row.blocks[index - 1].isPlaceholder &&
+            !(
+              (block.blockNumber === 314 &&
+                row.blocks[index - 1].blockNumber === 315) ||
+              (block.blockNumber === 315 &&
+                row.blocks[index - 1].blockNumber === 314)
+            )
           "
           class="horizontal-line pulsing-line"
+        ></div>
+        <div
+          v-if="
+            ((rowIndex % 4 === 1 || rowIndex % 4 === 3) &&
+              row.blocks[index].blockNumber === 314 &&
+              row.blocks[index - 1].blockNumber === 315) ||
+            ((rowIndex % 4 === 0 || rowIndex % 4 === 2) &&
+              row.blocks[index].blockNumber === 315 &&
+              row.blocks[index - 1].blockNumber === 314)
+          "
+          :class="[
+            'horizontal-line-animation',
+            { 'horizontal-line-animation-visible': showHorizontallLine },
+          ]"
         ></div>
         <block
           v-if="!block.isAnimated"
@@ -27,16 +47,28 @@
           :class="['block', { placeholder: block.isPlaceholder }]"
         ></block>
 
-        <animated-block v-else class="animated"></animated-block>
+        <animated-block
+          v-else
+          class="animated"
+          @restart-animation="restartLineAnimation"
+        ></animated-block>
         <div class="vertical-line-container">
           <div
             v-if="
               rowIndex < blockRows.length - 1 &&
               !block.isPlaceholder &&
               ((rowIndex % 2 === 0 && index === row.blocks.length - 1) ||
-                (rowIndex % 2 !== 0 && index === 0))
+                (rowIndex % 2 !== 0 && index === 0)) &&
+              rowIndex !== 6
             "
             class="vertical-line pulsing-line"
+          ></div>
+          <div
+            v-if="rowIndex === 6"
+            :class="[
+              'vertical-line-animation',
+              { 'vertical-line-animation-visible': showVerticalLine },
+            ]"
           ></div>
         </div>
       </template>
@@ -45,13 +77,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, ComponentPublicInstance } from 'vue'
+import { ref, ComponentPublicInstance, onMounted } from 'vue'
 import Block from '@/components/Block.vue'
 import AnimatedBlock from '@/components/AnimatedBlock.vue'
 import { ROUTE_NAMES } from '@/enums'
 import { router } from '@/router'
 
 const blockRefs = ref<HTMLElement[]>([])
+const showVerticalLine = ref(false)
+const showHorizontallLine = ref(false)
 
 const setBlockRef = (
   el: Element | ComponentPublicInstance | null,
@@ -167,6 +201,24 @@ const computeBlockRows = () => {
 
 const blockRows = ref(computeBlockRows())
 
+const restartLineAnimation = () => {
+  setTimeout(() => {
+    showVerticalLine.value = true
+    showHorizontallLine.value = true
+  }, 5000)
+  showVerticalLine.value = false
+  showHorizontallLine.value = false
+}
+
+onMounted(() => {
+  setTimeout(() => {
+    showVerticalLine.value = true
+  }, 5000)
+  setTimeout(() => {
+    showHorizontallLine.value = true
+  }, 5000)
+})
+
 window.addEventListener('resize', () => {
   blockRows.value = computeBlockRows()
 })
@@ -179,7 +231,7 @@ window.addEventListener('resize', () => {
   flex-direction: column;
   position: relative;
   padding-bottom: 20px;
-  width: 50%;
+  width: 80%;
   z-index: 0;
   margin: 0 auto;
 }
@@ -213,6 +265,35 @@ window.addEventListener('resize', () => {
   margin-top: 200px;
   margin-left: -220px;
   flex-shrink: 0;
+}
+
+.horizontal-line-animation {
+  width: 80px;
+  height: 5px;
+  background-color: #00c2ff;
+  margin: 135px -35px;
+  flex-shrink: 0;
+  opacity: 0;
+}
+
+.horizontal-line-animation-visible {
+  opacity: 1;
+  transition: opacity 6s ease-in;
+}
+
+.vertical-line-animation {
+  width: 6px;
+  height: 120px;
+  background-color: #00c2ff;
+  margin-top: 200px;
+  margin-left: -220px;
+  flex-shrink: 0;
+  opacity: 0;
+}
+
+.vertical-line-animation-visible {
+  opacity: 1;
+  transition: opacity 6s ease-in;
 }
 
 .block {
