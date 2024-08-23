@@ -17,8 +17,8 @@
           "
           class="horizontal-line pulsing-line"
         ></div>
-
         <block
+          v-if="!block.isAnimated"
           :title="block.title"
           :description="block.description"
           :block-number="block.blockNumber"
@@ -26,6 +26,8 @@
           :ref="el => setBlockRef(el, block.blockNumber)"
           :class="['block', { placeholder: block.isPlaceholder }]"
         ></block>
+
+        <animated-block v-else class="animated"></animated-block>
         <div class="vertical-line-container">
           <div
             v-if="
@@ -45,6 +47,7 @@
 <script setup lang="ts">
 import { ref, ComponentPublicInstance } from 'vue'
 import Block from '@/components/Block.vue'
+import AnimatedBlock from '@/components/AnimatedBlock.vue'
 import { ROUTE_NAMES } from '@/enums'
 import { router } from '@/router'
 
@@ -52,9 +55,9 @@ const blockRefs = ref<HTMLElement[]>([])
 
 const setBlockRef = (
   el: Element | ComponentPublicInstance | null,
-  index: number | null,
+  index: number,
 ) => {
-  if (el instanceof HTMLElement && index !== null) {
+  if (el instanceof HTMLElement) {
     blockRefs.value[index] = el
   }
 }
@@ -102,6 +105,13 @@ const blocks = ref([
     blockNumber: 314,
     isPlaceholder: false,
   },
+  {
+    title: 'Animated Block',
+    description: '',
+    blockNumber: 315,
+    isPlaceholder: false,
+    isAnimated: true,
+  },
 ])
 
 const selectedBlockIndex = ref<number | null>(null)
@@ -114,7 +124,6 @@ const selectBlock = (index: number) => {
   }
 }
 
-// Berechnung der Reihen basierend auf der Bildschirmbreite
 const computeBlockRows = () => {
   const maxBlocksPerRow = Math.floor(window.innerWidth / 300) || 1
   const rows = []
@@ -124,12 +133,10 @@ const computeBlockRows = () => {
     const endIndex = Math.min(startIndex + maxBlocksPerRow, blocks.value.length)
     const currentRowBlocks = blocks.value.slice(startIndex, endIndex)
 
-    // Wenn es eine gerade Reihe ist, umkehren
     if (rows.length % 2 === 1) {
       currentRowBlocks.reverse()
     }
 
-    // Platzhalter-Blöcke hinzufügen, wenn die Reihe nicht voll ist
     const placeholdersToAdd = maxBlocksPerRow - currentRowBlocks.length
     if (placeholdersToAdd > 0) {
       for (let i = 0; i < placeholdersToAdd; i++) {
@@ -141,10 +148,8 @@ const computeBlockRows = () => {
         }
 
         if (rows.length % 2 === 1) {
-          // Gerade Reihe: Platzhalter am Anfang hinzufügen
           currentRowBlocks.unshift(placeholderBlock)
         } else {
-          // Ungerade Reihe: Platzhalter am Ende hinzufügen
           currentRowBlocks.push(placeholderBlock)
         }
       }
@@ -218,12 +223,25 @@ window.addEventListener('resize', () => {
   margin-top: 60px;
   background-color: #1c1c1e;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
   flex-shrink: 0;
   z-index: 2;
+}
+
+.animated {
+  width: 150px;
+  height: 150px;
+  margin-left: 35px;
+  margin-right: 35px;
+  margin-top: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  z-index: 0;
 }
 
 .block.placeholder {
