@@ -22,7 +22,9 @@
             )
           "
           class="horizontal-line pulsing-line"
-        ></div>
+        >
+          <div class="pulse-horizontal"></div>
+        </div>
         <div
           v-if="
             ((rowIndex % 4 === 1 || rowIndex % 4 === 3) &&
@@ -36,7 +38,8 @@
             'horizontal-line-animation',
             { 'horizontal-line-animation-visible': showHorizontallLine },
           ]"
-        ></div>
+        >
+        </div>
         <block
           v-if="!block.isAnimated"
           :title="block.title"
@@ -51,7 +54,9 @@
           v-else
           class="animated"
           @restart-animation="restartLineAnimation"
+          @finish-animation="finishAnimation"
         ></animated-block>
+
         <div class="vertical-line-container">
           <div
             v-if="
@@ -62,14 +67,17 @@
               rowIndex !== 6
             "
             class="vertical-line pulsing-line"
-          ></div>
+          >
+            <div class="pulse-vertical"></div>
+          </div>
           <div
             v-if="rowIndex === 6"
             :class="[
               'vertical-line-animation',
               { 'vertical-line-animation-visible': showVerticalLine },
             ]"
-          ></div>
+          >
+          </div>
         </div>
       </template>
     </div>
@@ -209,6 +217,10 @@ const restartLineAnimation = () => {
   showHorizontallLine.value = false
 }
 
+const finishAnimation = () => {
+  //get horizontal-line-animation and change into horizontal-line until the animation start again
+}
+
 onMounted(() => {
   setTimeout(() => {
     showVerticalLine.value = true
@@ -247,7 +259,8 @@ window.addEventListener('resize', () => {
   height: 5px;
   background-color: #00c2ff;
   margin: 135px -40px;
-  flex-shrink: 0;
+  position: relative;
+  overflow: visible;
 }
 
 .vertical-line-container {
@@ -263,7 +276,76 @@ window.addEventListener('resize', () => {
   background-color: #00c2ff;
   margin-top: 200px;
   margin-left: -220px;
-  flex-shrink: 0;
+  position: relative;
+  overflow: visible;
+}
+
+.pulse-horizontal {
+  width: 30px;
+  height: 4px;
+  background-color: #00c2ff;
+  border-radius: 50%;
+  box-shadow: 0 0 10px 10px rgba(0, 194, 255, 0.8);
+  position: absolute;
+  z-index: 1;
+}
+
+.pulse-vertical {
+  width: 4px;
+  height: 30px;
+  background-color: #00c2ff;
+  border-radius: 50%;
+  box-shadow: 0 0 15px 10px rgba(0, 194, 255, 0.8);
+  position: absolute;
+  z-index: 1;
+}
+
+.left-to-right .pulse-horizontal {
+  top: 50%;
+  transform: translateY(-50%);
+  left: 0;
+  animation: pulse-horizontal 2s linear infinite;
+}
+
+.right-to-left .pulse-horizontal {
+  top: 50%;
+  transform: translateY(-50%);
+  left: 0;
+  animation: pulse-horizontal-reverse 2s linear infinite;
+}
+
+.vertical-line .pulse-vertical {
+  left: 50%;
+  transform: translateX(-50%);
+  top: 0; /* Startet am oberen Rand der Linie */
+  animation: pulse-vertical 2s linear infinite;
+}
+
+@keyframes pulse-horizontal {
+  0% {
+    left: 0;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+@keyframes pulse-horizontal-reverse {
+  0% {
+    left: 100%;
+  }
+  100% {
+    left: 0;
+  }
+}
+
+@keyframes pulse-vertical {
+  0% {
+    top: 0;
+  }
+  100% {
+    top: 100%;
+  }
 }
 
 .horizontal-line-animation {
@@ -275,11 +357,6 @@ window.addEventListener('resize', () => {
   opacity: 0;
 }
 
-.horizontal-line-animation-visible {
-  opacity: 1;
-  transition: opacity 3.3s ease-in;
-}
-
 .vertical-line-animation {
   width: 6px;
   height: 120px;
@@ -288,6 +365,11 @@ window.addEventListener('resize', () => {
   margin-left: -220px;
   flex-shrink: 0;
   opacity: 0;
+}
+
+.horizontal-line-animation-visible {
+  opacity: 1;
+  transition: opacity 6.3s ease-in;
 }
 
 .vertical-line-animation-visible {

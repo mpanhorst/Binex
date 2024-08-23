@@ -38,6 +38,7 @@ import Block from '@/components/Block.vue'
 
 // Event Emitter definieren
 const emit = defineEmits(['restartAnimation'])
+const finish = defineEmits(['finishAnimation'])
 
 const totalSteps = 100
 const currentStep = ref(0)
@@ -52,6 +53,7 @@ const startAnimation = () => {
     if (currentStep.value > totalSteps) {
       clearInterval(interval)
       isCompleted.value = true
+      finish('finishAnimation')
 
       setTimeout(() => {
         isCompleted.value = false
@@ -84,7 +86,7 @@ onMounted(() => {
   opacity: 0;
   transition: opacity 0.3s, transform 0.3s ease-out;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  transform: translateY(-50px); /* Startposition */
+  transform: translateY(-50px);
 }
 
 .block-segment.active {
