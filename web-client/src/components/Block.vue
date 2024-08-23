@@ -59,14 +59,10 @@ const selectBlock = () => {
 
 .block-number {
   position: absolute;
-  top: 8px;
-  left: 8px;
+  top: 10px;
+  right: 10px;
   font-size: 0.8rem;
-  color: #ffffff;
-  background-color: #00c2ff;
-  border-radius: 50%;
-  width: 24px;
-  height: 24px;
+  color: #888888;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -87,12 +83,12 @@ const selectBlock = () => {
 }
 
 .block:hover {
-  transform: scale(1.05);
+  transform: scale(1.15);
   box-shadow: 0 0 15px rgba(0, 194, 255, 0.5);
 }
 
 .block.active {
-  transform: scale(1.1);
+  transform: scale(1.2);
   box-shadow: 0 0 25px rgba(0, 194, 255, 1);
 }
 </style>

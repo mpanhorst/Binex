@@ -8,17 +8,36 @@
         rowIndex % 2 === 0 ? 'left-to-right' : 'right-to-left',
       ]"
     >
-      <block
-        v-for="(block, index) in row.blocks"
-        :key="index"
-        :title="block.title"
-        :description="block.description"
-        :block-number="block.isPlaceholder ? null : block.blockNumber"
-        @click="!block.isPlaceholder && selectBlock(block.blockNumber)"
-        :ref="el => setBlockRef(el, block.blockNumber)"
-        :class="['block', { placeholder: block.isPlaceholder }]"
-      >
-      </block>
+      <template v-for="(block, index) in row.blocks" :key="'block-' + index">
+        <div
+          v-if="
+            index > 0 &&
+            !block.isPlaceholder &&
+            !row.blocks[index - 1].isPlaceholder
+          "
+          class="horizontal-line pulsing-line"
+        ></div>
+
+        <block
+          :title="block.title"
+          :description="block.description"
+          :block-number="block.blockNumber"
+          @click="!block.isPlaceholder && selectBlock(block.blockNumber)"
+          :ref="el => setBlockRef(el, block.blockNumber)"
+          :class="['block', { placeholder: block.isPlaceholder }]"
+        ></block>
+        <div class="vertical-line-container">
+          <div
+            v-if="
+              rowIndex < blockRows.length - 1 &&
+              !block.isPlaceholder &&
+              ((rowIndex % 2 === 0 && index === row.blocks.length - 1) ||
+                (rowIndex % 2 !== 0 && index === 0))
+            "
+            class="vertical-line pulsing-line"
+          ></div>
+        </div>
+      </template>
     </div>
   </div>
 </template>
@@ -29,12 +48,11 @@ import Block from '@/components/Block.vue'
 import { ROUTE_NAMES } from '@/enums'
 import { router } from '@/router'
 
-// Referenzen zu den Block-Elementen
 const blockRefs = ref<HTMLElement[]>([])
 
 const setBlockRef = (
   el: Element | ComponentPublicInstance | null,
-  index: number | null, // Index kann jetzt auch null sein für Platzhalter
+  index: number | null,
 ) => {
   if (el instanceof HTMLElement && index !== null) {
     blockRefs.value[index] = el
@@ -45,43 +63,43 @@ const blocks = ref([
   {
     title: 'NFT',
     description: 'What are NFTs?',
-    blockNumber: 1,
+    blockNumber: 308,
     isPlaceholder: false,
   },
   {
     title: 'Blockchain',
     description: 'Explore Blockchain',
-    blockNumber: 2,
+    blockNumber: 309,
     isPlaceholder: false,
   },
   {
     title: 'MetaMask',
     description: 'What is MetaMask?',
-    blockNumber: 3,
+    blockNumber: 310,
     isPlaceholder: false,
   },
   {
     title: 'Events',
     description: 'Upcoming Events',
-    blockNumber: 4,
+    blockNumber: 311,
     isPlaceholder: false,
   },
   {
     title: 'NFT Game',
     description: 'Explore our NFT Game',
-    blockNumber: 5,
+    blockNumber: 312,
     isPlaceholder: false,
   },
   {
     title: 'Contact',
     description: 'Get in touch with us',
-    blockNumber: 6,
+    blockNumber: 313,
     isPlaceholder: false,
   },
   {
     title: 'About Us',
     description: 'Learn more about us',
-    blockNumber: 7,
+    blockNumber: 314,
     isPlaceholder: false,
   },
 ])
@@ -105,11 +123,6 @@ const computeBlockRows = () => {
   while (startIndex < blocks.value.length) {
     const endIndex = Math.min(startIndex + maxBlocksPerRow, blocks.value.length)
     const currentRowBlocks = blocks.value.slice(startIndex, endIndex)
-
-    // Blocknummern zuweisen
-    currentRowBlocks.forEach((block, i) => {
-      block.blockNumber = startIndex + i + 1
-    })
 
     // Wenn es eine gerade Reihe ist, umkehren
     if (rows.length % 2 === 1) {
@@ -157,34 +170,76 @@ window.addEventListener('resize', () => {
 <style scoped>
 .blockchain-navigation {
   display: flex;
+  justify-content: center;
   flex-direction: column;
-  gap: 20px;
   position: relative;
-  width: 100%;
+  padding-bottom: 20px;
+  width: 50%;
+  z-index: 0;
+  margin: 0 auto;
 }
 
 .block-row {
   display: flex;
   justify-content: center;
   width: 100%;
+  height: 230px;
+}
+
+.horizontal-line {
+  width: 80px;
+  height: 5px;
+  background-color: #00c2ff;
+  margin: 135px -40px;
+  flex-shrink: 0;
+}
+
+.vertical-line-container {
+  display: flex;
+  justify-content: center;
+  width: 6px;
+  position: relative;
+}
+
+.vertical-line {
+  width: 6px;
+  height: 120px;
+  background-color: #00c2ff;
+  margin-top: 200px;
+  margin-left: -220px;
+  flex-shrink: 0;
 }
 
 .block {
-  width: 200px;
-  height: 200px;
+  width: 150px;
+  height: 150px;
   margin-left: 35px;
   margin-right: 35px;
   margin-top: 60px;
-  margin-bottom: -40px;
   background-color: #1c1c1e;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-shrink: 0;
+  z-index: 2;
 }
 
 .block.placeholder {
   visibility: hidden;
+}
+
+.pulsing-line {
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    stroke-dashoffset: 100;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
 }
 </style>
