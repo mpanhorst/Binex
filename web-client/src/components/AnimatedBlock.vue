@@ -15,6 +15,9 @@
             'corner-top-left': n === 99,
           },
         ]"
+        :style="{
+          transform: n < currentStep ? 'translateY(0)' : 'translateY(-50px)',
+        }"
       ></div>
     </div>
 
@@ -52,7 +55,7 @@ const startAnimation = () => {
 
       setTimeout(() => {
         isCompleted.value = false
-        emit('restartAnimation') // Event auslösen
+        emit('restartAnimation')
         startAnimation()
       }, 5000)
     }
@@ -70,7 +73,7 @@ onMounted(() => {
   flex-wrap: wrap;
   width: 150px;
   height: 150px;
-  background: var(--app-bg);
+  background: #0d1117;
   justify-content: center;
   align-items: center;
 }
@@ -79,13 +82,15 @@ onMounted(() => {
   width: 15px;
   height: 15px;
   opacity: 0;
-  transition: opacity 0.3s;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  transition: opacity 0.3s, transform 0.3s ease-out;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-50px); /* Startposition */
 }
 
 .block-segment.active {
   opacity: 1;
-  background-color: #1c1c1e;
+  transform: translateY(0); /* Endposition */
+  background-color: #30363d;
 }
 
 .block-segment.corner-top-left {

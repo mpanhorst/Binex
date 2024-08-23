@@ -1,6 +1,9 @@
 <template>
-  <div v-if="isAppInitialized" class="app__container">
-    <router-view v-slot="{ Component, route }">
+  <div
+    v-if="isAppInitialized"
+    :class="['app__container', { 'home-bg': isHomePage }]"
+  >
+    <router-view v-slot="{ Component }">
       <!-- AppNavbar nur auf NFT-Seiten anzeigen -->
       <app-navbar
         v-if="
@@ -32,12 +35,13 @@
 <script lang="ts" setup>
 import { Loader, AppNavbar } from '@/common'
 import { ErrorHandler } from '@/helpers/error-handler'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useNotifications } from '@/composables'
 import { useWeb3ProvidersStore, useErc721Store } from '@/store'
 import { config } from '@config'
 import { storeToRefs } from 'pinia'
 import ConnectPage from '@/pages/ConnectPage/ConnectPage.vue'
+import { useRoute } from 'vue-router'
 
 const isAppInitialized = ref(false)
 const web3ProvidersStore = useWeb3ProvidersStore()
@@ -45,6 +49,10 @@ const web3ProvidersStore = useWeb3ProvidersStore()
 const { erc721 } = useErc721Store()
 
 const { provider, isValidChain } = storeToRefs(useWeb3ProvidersStore())
+
+const route = useRoute() // Zugriff auf die aktuelle Route
+
+const isHomePage = computed(() => route.name === 'app')
 
 const init = async () => {
   isAppInitialized.value = false
@@ -67,15 +75,17 @@ init()
 
 .app__container {
   display: grid;
-  grid-template-rows: 1fr max-content;
   grid-template-rows: toRem(85) 1fr max-content;
   flex: 1;
   background: var(--app-bg);
 
   @include respond-to(small) {
-    grid-template-rows: 1fr max-content;
     grid-template-rows: max-content 1fr max-content;
   }
+}
+
+.home-bg {
+  background: #0d1117;
 }
 
 .app__main {

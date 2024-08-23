@@ -42,7 +42,7 @@
           :title="block.title"
           :description="block.description"
           :block-number="block.blockNumber"
-          @click="!block.isPlaceholder && selectBlock(block.blockNumber)"
+          @click="!block.isPlaceholder && selectBlock(index)"
           :ref="el => setBlockRef(el, block.blockNumber)"
           :class="['block', { placeholder: block.isPlaceholder }]"
         ></block>
@@ -152,8 +152,7 @@ const selectedBlockIndex = ref<number | null>(null)
 
 const selectBlock = (index: number) => {
   selectedBlockIndex.value = index
-
-  if (blocks.value[index - 1].title === 'NFT Game') {
+  if (blocks.value[index].title === 'NFT Game') {
     router.push({ name: ROUTE_NAMES.nfts })
   }
 }
@@ -205,7 +204,7 @@ const restartLineAnimation = () => {
   setTimeout(() => {
     showVerticalLine.value = true
     showHorizontallLine.value = true
-  }, 5000)
+  }, 7000)
   showVerticalLine.value = false
   showHorizontallLine.value = false
 }
@@ -213,10 +212,10 @@ const restartLineAnimation = () => {
 onMounted(() => {
   setTimeout(() => {
     showVerticalLine.value = true
-  }, 5000)
+  }, 7000)
   setTimeout(() => {
     showHorizontallLine.value = true
-  }, 5000)
+  }, 7000)
 })
 
 window.addEventListener('resize', () => {
@@ -231,7 +230,7 @@ window.addEventListener('resize', () => {
   flex-direction: column;
   position: relative;
   padding-bottom: 20px;
-  width: 80%;
+  width: 100%;
   z-index: 0;
   margin: 0 auto;
 }
@@ -268,17 +267,17 @@ window.addEventListener('resize', () => {
 }
 
 .horizontal-line-animation {
-  width: 80px;
+  width: 90px;
   height: 5px;
   background-color: #00c2ff;
-  margin: 135px -35px;
+  margin: 135px -40px;
   flex-shrink: 0;
   opacity: 0;
 }
 
 .horizontal-line-animation-visible {
   opacity: 1;
-  transition: opacity 6s ease-in;
+  transition: opacity 3.3s ease-in;
 }
 
 .vertical-line-animation {
@@ -293,7 +292,7 @@ window.addEventListener('resize', () => {
 
 .vertical-line-animation-visible {
   opacity: 1;
-  transition: opacity 6s ease-in;
+  transition: opacity 6.3s ease-in;
 }
 
 .block {
@@ -302,7 +301,8 @@ window.addEventListener('resize', () => {
   margin-left: 35px;
   margin-right: 35px;
   margin-top: 60px;
-  background-color: #1c1c1e;
+  background-color: #30363d;
+  border: 1px #30363d solid;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
   display: flex;
