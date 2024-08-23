@@ -26,9 +26,10 @@ import { ref } from 'vue'
 interface BlockProps {
   title: string
   description: string
-  blockNumber: number
+  blockNumber: number | null
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const props = defineProps<BlockProps>()
 
 const isHovered = ref(false)
