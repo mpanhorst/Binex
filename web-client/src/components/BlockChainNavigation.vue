@@ -35,10 +35,13 @@
               row.blocks[index - 1].blockNumber === 314)
           "
           :class="[
-            'horizontal-line-animation',
+            isLineAnimated
+              ? 'horizontal-line pulsing-line'
+              : 'horizontal-line-animation',
             { 'horizontal-line-animation-visible': showHorizontallLine },
           ]"
         >
+          <div v-if="isLineAnimated" class="pulse-horizontal"></div>
         </div>
         <block
           v-if="!block.isAnimated"
@@ -53,8 +56,8 @@
         <animated-block
           v-else
           class="animated"
-          @restart-animation="restartLineAnimation"
-          @finish-animation="finishAnimation"
+          @restart-block-animation="restartBlockAnimation"
+          @finish-block-animation="finishBlockAnimation"
         ></animated-block>
 
         <div class="vertical-line-container">
@@ -73,10 +76,13 @@
           <div
             v-if="rowIndex === 6"
             :class="[
-              'vertical-line-animation',
-              { 'vertical-line-animation-visible': showVerticalLine },
+              isLineAnimated
+                ? 'vertical-line pulsing-line'
+                : 'vertical-line-animation',
+              { 'vertical-line-animation-visible': showHorizontallLine },
             ]"
           >
+            <div v-if="isLineAnimated" class="pulse-vertical"></div>
           </div>
         </div>
       </template>
@@ -94,6 +100,9 @@ import { router } from '@/router'
 const blockRefs = ref<HTMLElement[]>([])
 const showVerticalLine = ref(false)
 const showHorizontallLine = ref(false)
+
+// Reaktive Variable für den Zustand der animierten Linie
+const isLineAnimated = ref(false)
 
 const setBlockRef = (
   el: Element | ComponentPublicInstance | null,
@@ -208,17 +217,20 @@ const computeBlockRows = () => {
 
 const blockRows = ref(computeBlockRows())
 
-const restartLineAnimation = () => {
+const restartBlockAnimation = () => {
+  console.log('Restarting block animation...')
+  isLineAnimated.value = false
   setTimeout(() => {
     showVerticalLine.value = true
     showHorizontallLine.value = true
   }, 7000)
-  showVerticalLine.value = false
-  showHorizontallLine.value = false
 }
 
-const finishAnimation = () => {
-  //get horizontal-line-animation and change into horizontal-line until the animation start again
+const finishBlockAnimation = () => {
+  console.log('Finishing block animation...')
+  isLineAnimated.value = true
+  showVerticalLine.value = false
+  showHorizontallLine.value = false
 }
 
 onMounted(() => {
@@ -297,7 +309,7 @@ window.addEventListener('resize', () => {
   border-radius: 50%;
   box-shadow: 0 0 15px 10px rgba(0, 194, 255, 0.8);
   position: absolute;
-  z-index: 1;
+  z-index: 0;
 }
 
 .left-to-right .pulse-horizontal {

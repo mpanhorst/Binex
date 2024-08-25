@@ -37,8 +37,7 @@ import { ref, onMounted, defineEmits } from 'vue'
 import Block from '@/components/Block.vue'
 
 // Event Emitter definieren
-const emit = defineEmits(['restartAnimation'])
-const finish = defineEmits(['finishAnimation'])
+const emit = defineEmits(['restartBlockAnimation', 'finishBlockAnimation'])
 
 const totalSteps = 100
 const currentStep = ref(0)
@@ -53,13 +52,16 @@ const startAnimation = () => {
     if (currentStep.value > totalSteps) {
       clearInterval(interval)
       isCompleted.value = true
-      finish('finishAnimation')
 
       setTimeout(() => {
         isCompleted.value = false
-        emit('restartAnimation')
+        emit('restartBlockAnimation')
+        console.log('Restarting animation...')
         startAnimation()
       }, 5000)
+      // Emit finishAnimation event
+      emit('finishBlockAnimation')
+      console.log('Finish animation...')
     }
   }, 100)
 }
