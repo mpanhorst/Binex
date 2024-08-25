@@ -56,12 +56,10 @@ const startAnimation = () => {
       setTimeout(() => {
         isCompleted.value = false
         emit('restartBlockAnimation')
-        console.log('Restarting animation...')
         startAnimation()
-      }, 5000)
+      }, 7000)
       // Emit finishAnimation event
       emit('finishBlockAnimation')
-      console.log('Finish animation...')
     }
   }, 100)
 }
