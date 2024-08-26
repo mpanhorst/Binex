@@ -136,6 +136,7 @@
 </template>
 
 <script setup lang="ts">
+/* Import necessary modules and components */
 import { ref, ComponentPublicInstance, onMounted } from 'vue'
 import Block from '@/components/Block.vue'
 import AnimatedBlock from '@/components/AnimatedBlock.vue'
@@ -143,7 +144,7 @@ import { ROUTE_NAMES } from '@/enums'
 import { router } from '@/router'
 import { blocks as importedBlocks } from '@/data/blocksNavigationData'
 
-// Typ für Block definieren
+/* Define the BlockType interface */
 interface BlockType {
   title: string
   description: string
@@ -152,23 +153,21 @@ interface BlockType {
   isAnimated?: boolean
 }
 
+/* Reactive blocks array */
+const blocks = ref(importedBlocks)
+
+/* Reactive state variables */
 const blockRefs = ref<HTMLElement[]>([])
 const showVerticalLine = ref(false)
 const showHorizontallLine = ref(false)
-
 const isHovered = ref(false)
-
-// Mach das blocks Array reaktiv
-const blocks = ref(importedBlocks)
-
-// Reaktive Variable für den Zustand der spezial Linie
-// zwischen dem animierten Block
 const isLineActive = ref(false)
-
 const isLineAnimated = ref(false)
 const currentAnimationIndex = ref<number>(blocks.value[0].blockNumber)
 const isBlockHighlighted = ref(false)
+const selectedBlockIndex = ref<number | null>(null)
 
+/* Method to set references for blocks */
 const setBlockRef = (
   el: Element | ComponentPublicInstance | null,
   blockNumber: number,
@@ -178,8 +177,7 @@ const setBlockRef = (
   }
 }
 
-const selectedBlockIndex = ref<number | null>(null)
-
+/* Method to handle block selection and navigation */
 const selectBlock = (index: number) => {
   selectedBlockIndex.value = index
   if (blocks.value[index].title === 'NFT Game') {
@@ -187,6 +185,7 @@ const selectBlock = (index: number) => {
   }
 }
 
+/* Method to compute and organize blocks into rows */
 const computeBlockRows = () => {
   const maxBlocksPerRow = Math.floor(window.innerWidth / 300) || 1
   const rows = []
@@ -228,9 +227,10 @@ const computeBlockRows = () => {
   return rows
 }
 
-// Verwende ref mit einem expliziten Typ für blockRows
+/* Reactive ref with blockRows calculation */
 const blockRows = ref<{ blocks: typeof blocks.value }[]>(computeBlockRows())
 
+/* Method to determine data index for lines */
 const determineDataIndex = (
   block: BlockType,
   direction: boolean,
@@ -239,31 +239,30 @@ const determineDataIndex = (
   const blockNumbers = blocks.value.map(b => b.blockNumber)
   if (blockNumbers.includes(block.blockNumber)) {
     if (direction) {
-      if (isVertical) {
-        return block.blockNumber
-      }
-      return block.blockNumber - 1
+      return isVertical ? block.blockNumber : block.blockNumber - 1
     }
     return block.blockNumber
   }
   return -1
 }
 
+/* Method to restart block animation */
 const restartBlockAnimation = () => {
   isLineActive.value = false
   setTimeout(() => {
     showVerticalLine.value = true
     showHorizontallLine.value = true
-  }, 7000)
+  }, 10000)
 }
 
+/* Method to finish block animation */
 const finishBlockAnimation = () => {
   isLineActive.value = true
   showVerticalLine.value = false
   showHorizontallLine.value = false
 }
 
-// Funktion zur Steuerung der nächsten Animation
+/* Function to control the next animation */
 const startNextLineAnimation = () => {
   const totalLines = blocks.value[blocks.value.length - 1].blockNumber
 
@@ -272,20 +271,22 @@ const startNextLineAnimation = () => {
 
     setTimeout(() => {
       isBlockHighlighted.value = false
-    }, 1000)
+    }, 1000) // Short highlight effect duration
 
     setTimeout(() => {
       isLineAnimated.value = true
       currentAnimationIndex.value++
       startNextLineAnimation()
-    }, 3500)
+    }, 3500) // Delay before starting the next line animation
   } else {
     setTimeout(() => {
       currentAnimationIndex.value = blocks.value[0].blockNumber
       startNextLineAnimation()
-    }, 2000)
+    }, 8000) // Wait before restarting the animation sequence
   }
 }
+
+/* onMounted lifecycle hook */
 onMounted(() => {
   startNextLineAnimation()
   setTimeout(() => {
@@ -294,12 +295,14 @@ onMounted(() => {
   }, 7000)
 })
 
+/* Event listener for window resize */
 window.addEventListener('resize', () => {
   blockRows.value = computeBlockRows()
 })
 </script>
 
 <style scoped>
+/* Container and Layout Styles */
 .blockchain-navigation {
   display: flex;
   justify-content: center;
@@ -318,6 +321,7 @@ window.addEventListener('resize', () => {
   height: 230px;
 }
 
+/* Horizontal Line Styles */
 .horizontal-line {
   width: 80px;
   height: 5px;
@@ -325,8 +329,24 @@ window.addEventListener('resize', () => {
   margin: 135px -40px;
   position: relative;
   overflow: visible;
+  z-index: -1;
 }
 
+.horizontal-line-animation {
+  width: 80px;
+  height: 5px;
+  background-color: #00c2ff;
+  margin: 135px -40px;
+  flex-shrink: 0;
+  opacity: 0;
+}
+
+.horizontal-line-animation-visible {
+  opacity: 1;
+  transition: opacity 6.3s ease-in;
+}
+
+/* Vertical Line Styles */
 .vertical-line-container {
   display: flex;
   justify-content: center;
@@ -344,6 +364,22 @@ window.addEventListener('resize', () => {
   overflow: visible;
 }
 
+.vertical-line-animation {
+  width: 6px;
+  height: 120px;
+  background-color: #00c2ff;
+  margin-top: 200px;
+  margin-left: -220px;
+  flex-shrink: 0;
+  opacity: 0;
+}
+
+.vertical-line-animation-visible {
+  opacity: 1;
+  transition: opacity 6.3s ease-in;
+}
+
+/* Pulse Animation Styles */
 .pulse-horizontal {
   width: 60px;
   height: 10px;
@@ -351,7 +387,6 @@ window.addEventListener('resize', () => {
   border-radius: 95%;
   box-shadow: 0 0 12px 6px rgba(0, 194, 255, 0.8);
   position: absolute;
-  z-index: -1;
   transform: scaleX(1.2);
 }
 
@@ -362,7 +397,6 @@ window.addEventListener('resize', () => {
   border-radius: 95%;
   box-shadow: 0 0 12px 6px rgba(0, 194, 255, 0.8);
   position: absolute;
-  z-index: 0;
   transform: scaleY(1.2);
 }
 
@@ -387,6 +421,7 @@ window.addEventListener('resize', () => {
   animation: pulse-vertical 3.5s linear;
 }
 
+/* Keyframe Animations */
 @keyframes pulse-horizontal {
   0% {
     left: -100%;
@@ -414,35 +449,7 @@ window.addEventListener('resize', () => {
   }
 }
 
-.horizontal-line-animation {
-  width: 80px;
-  height: 5px;
-  background-color: #00c2ff;
-  margin: 135px -40px;
-  flex-shrink: 0;
-  opacity: 0;
-}
-
-.vertical-line-animation {
-  width: 6px;
-  height: 120px;
-  background-color: #00c2ff;
-  margin-top: 200px;
-  margin-left: -220px;
-  flex-shrink: 0;
-  opacity: 0;
-}
-
-.horizontal-line-animation-visible {
-  opacity: 1;
-  transition: opacity 6.3s ease-in;
-}
-
-.vertical-line-animation-visible {
-  opacity: 1;
-  transition: opacity 6.3s ease-in;
-}
-
+/* Block Styles */
 .block {
   width: 150px;
   height: 150px;
@@ -477,15 +484,7 @@ window.addEventListener('resize', () => {
   visibility: hidden;
 }
 
-@keyframes pulse {
-  0% {
-    stroke-dashoffset: 100;
-  }
-  100% {
-    stroke-dashoffset: 0;
-  }
-}
-
+/* Block Highlight Animation */
 .block-highlight {
   animation: highlight 1s ease-in-out infinite;
 }

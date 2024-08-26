@@ -61,7 +61,7 @@ const startAnimation = () => {
       // Emit finishAnimation event
       emit('finishBlockAnimation')
     }
-  }, 100)
+  }, 80)
 }
 
 onMounted(() => {
