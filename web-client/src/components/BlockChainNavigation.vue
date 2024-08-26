@@ -22,7 +22,7 @@
                 row.blocks[index - 1].blockNumber === 314)
             )
           "
-          class="horizontal-line pulsing-line"
+          class="horizontal-line"
           :data-index="determineDataIndex(block, rowIndex % 2 === 0)"
         >
           <div
@@ -45,9 +45,7 @@
               row.blocks[index - 1].blockNumber === 314)
           "
           :class="[
-            isLineActive
-              ? 'horizontal-line pulsing-line'
-              : 'horizontal-line-animation',
+            isLineActive ? 'horizontal-line' : 'horizontal-line-animation',
             { 'horizontal-line-animation-visible': showHorizontallLine },
           ]"
           :data-index="determineDataIndex(block, rowIndex % 2 === 0)"
@@ -70,7 +68,18 @@
           :block-number="block.blockNumber"
           @click="!block.isPlaceholder && selectBlock(index)"
           :ref="el => setBlockRef(el, block.blockNumber)"
-          :class="['block', { placeholder: block.isPlaceholder }]"
+          @mouseover="isHovered = true"
+          @mouseleave="isHovered = false"
+          :class="[
+            'block',
+            { placeholder: block.isPlaceholder },
+            {
+              'block-highlight':
+                currentAnimationIndex === block.blockNumber &&
+                isBlockHighlighted &&
+                !(isHovered && currentAnimationIndex !== block.blockNumber),
+            },
+          ]"
         ></block>
 
         <!-- Animierter Block -->
@@ -147,6 +156,8 @@ const blockRefs = ref<HTMLElement[]>([])
 const showVerticalLine = ref(false)
 const showHorizontallLine = ref(false)
 
+const isHovered = ref(false)
+
 // Mach das blocks Array reaktiv
 const blocks = ref(importedBlocks)
 
@@ -156,13 +167,14 @@ const isLineActive = ref(false)
 
 const isLineAnimated = ref(false)
 const currentAnimationIndex = ref<number>(blocks.value[0].blockNumber)
+const isBlockHighlighted = ref(false)
 
 const setBlockRef = (
   el: Element | ComponentPublicInstance | null,
-  index: number,
+  blockNumber: number,
 ) => {
   if (el instanceof HTMLElement) {
-    blockRefs.value[index] = el
+    blockRefs.value[blockNumber] = el
   }
 }
 
@@ -256,20 +268,24 @@ const startNextLineAnimation = () => {
   const totalLines = blocks.value[blocks.value.length - 1].blockNumber
 
   if (currentAnimationIndex.value < totalLines) {
+    isBlockHighlighted.value = true
+
+    setTimeout(() => {
+      isBlockHighlighted.value = false
+    }, 1000)
+
     setTimeout(() => {
       isLineAnimated.value = true
       currentAnimationIndex.value++
       startNextLineAnimation()
     }, 3500)
   } else {
-    // Wenn alle Linien animiert wurden, warte und starte erneut
     setTimeout(() => {
       currentAnimationIndex.value = blocks.value[0].blockNumber
       startNextLineAnimation()
     }, 2000)
   }
 }
-
 onMounted(() => {
   startNextLineAnimation()
   setTimeout(() => {
@@ -354,21 +370,21 @@ window.addEventListener('resize', () => {
   top: 50%;
   transform: translateY(-50%);
   left: 0;
-  animation: pulse-horizontal 3.5s linear infinite;
+  animation: pulse-horizontal 3.5s linear;
 }
 
 .right-to-left .pulse-horizontal {
   top: 50%;
   transform: translateY(-50%);
   left: 0;
-  animation: pulse-horizontal-reverse 3.5s linear infinite;
+  animation: pulse-horizontal-reverse 3.5s linear;
 }
 
 .vertical-line .pulse-vertical {
   left: 50%;
   transform: translateX(-50%);
   top: 0;
-  animation: pulse-vertical 4s linear infinite;
+  animation: pulse-vertical 3.5s linear;
 }
 
 @keyframes pulse-horizontal {
@@ -399,7 +415,7 @@ window.addEventListener('resize', () => {
 }
 
 .horizontal-line-animation {
-  width: 90px;
+  width: 80px;
   height: 5px;
   background-color: #00c2ff;
   margin: 135px -40px;
@@ -436,7 +452,7 @@ window.addEventListener('resize', () => {
   background-color: #30363d;
   border: 1px #30363d solid;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 2px 8px rgba(0, 194, 255, 0.6);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -461,16 +477,30 @@ window.addEventListener('resize', () => {
   visibility: hidden;
 }
 
-.pulsing-line {
-  animation: pulse 1.5s infinite;
-}
-
 @keyframes pulse {
   0% {
     stroke-dashoffset: 100;
   }
   100% {
     stroke-dashoffset: 0;
+  }
+}
+
+.block-highlight {
+  animation: highlight 1s ease-in-out infinite;
+}
+
+@keyframes highlight {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 2px 8px rgba(0, 194, 255, 0.6);
+  }
+  50% {
+    box-shadow: 0 2px 20px rgba(0, 194, 255, 1);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 2px 8px rgba(0, 194, 255, 0.6);
   }
 }
 </style>

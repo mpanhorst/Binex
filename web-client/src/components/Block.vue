@@ -48,7 +48,7 @@ const selectBlock = () => {
   background-color: #30363d;
   border: 1px #30363d solid;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 2px 8px rgba(0, 194, 255, 0.6);
   transition: transform 0.3s, box-shadow 0.3s;
   display: flex;
   flex-direction: column;
@@ -56,6 +56,7 @@ const selectBlock = () => {
   justify-content: center;
   cursor: pointer;
   position: relative;
+  z-index: 3;
 }
 
 .block-number {
@@ -85,7 +86,7 @@ const selectBlock = () => {
 
 .block:hover {
   transform: scale(1.15);
-  box-shadow: 0 0 15px rgba(0, 194, 255, 0.5);
+  box-shadow: 0 2px 15px rgba(0, 194, 255, 0.5);
 }
 
 .block.active {

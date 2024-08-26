@@ -57,7 +57,7 @@ const startAnimation = () => {
         isCompleted.value = false
         emit('restartBlockAnimation')
         startAnimation()
-      }, 7000)
+      }, 10000)
       // Emit finishAnimation event
       emit('finishBlockAnimation')
     }
