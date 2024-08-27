@@ -249,6 +249,7 @@ const determineDataIndex = (
 /* Method to restart block animation */
 const restartBlockAnimation = () => {
   isLineActive.value = false
+  showHorizontallLine.value = false
   setTimeout(() => {
     showVerticalLine.value = true
     showHorizontallLine.value = true
@@ -329,7 +330,7 @@ window.addEventListener('resize', () => {
   margin: 135px -40px;
   position: relative;
   overflow: visible;
-  z-index: -1;
+  z-index: 2;
 }
 
 .horizontal-line-animation {
@@ -381,7 +382,7 @@ window.addEventListener('resize', () => {
 
 /* Pulse Animation Styles */
 .pulse-horizontal {
-  width: 60px;
+  width: 20px;
   height: 10px;
   background-color: #00c2ff;
   border-radius: 95%;
@@ -392,7 +393,7 @@ window.addEventListener('resize', () => {
 
 .pulse-vertical {
   width: 10px;
-  height: 60px;
+  height: 20px;
   background-color: #00c2ff;
   border-radius: 95%;
   box-shadow: 0 0 12px 6px rgba(0, 194, 255, 0.8);
@@ -424,28 +425,52 @@ window.addEventListener('resize', () => {
 /* Keyframe Animations */
 @keyframes pulse-horizontal {
   0% {
-    left: -100%;
+    left: -10%;
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 1;
   }
   100% {
     left: 100%;
+    opacity: 0;
   }
 }
 
 @keyframes pulse-horizontal-reverse {
   0% {
     left: 100%;
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 1;
   }
   100% {
-    left: -100%;
+    left: -20%;
+    opacity: 0;
   }
 }
 
 @keyframes pulse-vertical {
   0% {
-    top: -100%;
+    top: 0;
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 1;
   }
   100% {
     top: 90%;
+    opacity: 0;
   }
 }
 
@@ -463,7 +488,7 @@ window.addEventListener('resize', () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-shrink: 0;
+  position: relative;
   z-index: 2;
 }
 

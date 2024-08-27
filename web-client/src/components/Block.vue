@@ -6,15 +6,21 @@
     @click="selectBlock"
     :class="{ active: isActive, hovered: isHovered }"
   >
-    <div class="block-number">
-      {{ blockNumber }}
-    </div>
-    <div class="block-content">
-      <div class="block-title">
-        {{ title }}
+    <!-- Schattenblock hinzufügen -->
+    <div class="block-shadow"></div>
+
+    <!-- Eigentlicher Blockinhalt -->
+    <div class="block-content-wrapper">
+      <div class="block-number">
+        {{ blockNumber }}
       </div>
-      <div class="block-description">
-        {{ description }}
+      <div class="block-content">
+        <div class="block-title">
+          {{ title }}
+        </div>
+        <div class="block-description">
+          {{ description }}
+        </div>
       </div>
     </div>
   </div>
@@ -42,21 +48,45 @@ const selectBlock = () => {
 </script>
 
 <style scoped>
-.block {
+.block-real {
   width: 150px;
   height: 150px;
   background-color: #30363d;
   border: 1px #30363d solid;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 194, 255, 0.6);
-  transition: transform 0.3s, box-shadow 0.3s;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   position: relative;
-  z-index: 3;
+  z-index: 1;
+}
+
+.block-shadow {
+  position: absolute;
+  top: -10px;
+  right: -18px;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(48, 54, 61, 0.4);
+  border-radius: 8px;
+  z-index: -20;
+  transition: none;
+  transform: scale(1.05);
+}
+
+.block-content-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #30363d;
+  border-radius: 8px;
+  transition: transform 0.3s, box-shadow 0.3s;
 }
 
 .block-number {
@@ -84,13 +114,15 @@ const selectBlock = () => {
   color: #888888;
 }
 
-.block:hover {
-  transform: scale(1.15);
+.block-real:hover .block-content-wrapper {
+  transform: scale(1.1);
+  border-radius: 8px;
   box-shadow: 0 2px 15px rgba(0, 194, 255, 0.5);
 }
 
-.block.active {
-  transform: scale(1.2);
+.block-real.active .block-content-wrapper {
+  transform: scale(1.15);
+  border-radius: 8px;
   box-shadow: 0 0 25px rgba(0, 194, 255, 1);
 }
 </style>
